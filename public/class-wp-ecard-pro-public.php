@@ -20,6 +20,8 @@
  * @subpackage Wp_Ecard_Pro/public
  * @author     Chad Lieberman <chad@flap.tvb>
  */
+
+ 
 class Wp_Ecard_Pro_Public {
 
 	/**

@@ -61,12 +61,12 @@ class Wp_Ecard_Pro_Admin
         require_once plugin_dir_path( __FILE__ ) . '../lib/carbon-fields/vendor/autoload.php'; // modify depending on your actual setup
         \Carbon_Fields\Carbon_Fields::boot();
         add_action( 'carbon_fields_register_fields', array($this,'create_admin_fields' ));
-  
+        add_action( 'carbon_fields_register_fields', array($this,'create_cpt_fields'));
 
     }
     public function create_admin_fields()
     {
-        Container::make( 'theme_options', $this->plugin_name, __( 'E-Card Settings (real)', $this->plugin_name . '-settings' ))
+        Container::make( 'theme_options', $this->plugin_name, __( 'Settings', $this->plugin_name . '-settings' ))
             ->set_page_parent( 'edit.php?post_type='. $this->plugin_name )
             ->add_tab( __('Profile'), array(
                 Field::make( 'text', 'crb_first_name', 'First Name' ),
@@ -79,6 +79,25 @@ class Wp_Ecard_Pro_Admin
             )
         );
     }
+
+    public function create_cpt_fields()
+    {
+        Container::make( 'post_meta', 'E-Card Images')
+        ->set_context( 'carbon_fields_after_title' )
+        ->add_fields( array(
+                Field::make( 'media_gallery', $this->plugin_name . '_media_gallery', '' )
+                    ->set_type( array( 'image', 'video' ) )->set_help_text( 'Add your e-card images here.  Click and drag to change the order in which they display' )
+            )
+        );
+        
+    }
+
+    /* Remove text editor from custom post type */
+    
+    function init_remove_text_editor(){
+        remove_post_type_support($this->plugin_name, 'editor');
+    }
+
     /**
      * Register the administration menu for this plugin into the WordPress Dashboard menu.
      *
@@ -151,32 +170,6 @@ class Wp_Ecard_Pro_Admin
     {
         // remove the default 'add new' page because it just takes up space //
         $page = remove_submenu_page('edit.php?post_type='.$this->plugin_name, 'post-new.php?post_type='.$this->plugin_name);
-    }
-
-    public function register_ecard_images_metabox()
-    {
-        add_meta_box(
-            'ecard-images',
-        __('E-Card Images', 'textdomain'),
-        array($this,'wep_images_meta_callback'),
-        Wp_Ecard_Pro::$cpt_slug,
-        'advanced',
-        'high'
-        );
-
-        // Move meta boxes below title //
-
-        add_action('edit_form_after_title', function () {
-            global $post, $wp_meta_boxes;
-            do_meta_boxes(get_current_screen(), 'advanced', $post);
-            unset($wp_meta_boxes[get_post_type($post)]['advanced']);
-        });
-    }
-
-    public function wep_images_meta_callback()
-    {
-        global $post;
-        echo 'Image Selection Will Go Here';
     }
 
     public static function new_cpt_wp_ecard_pro()

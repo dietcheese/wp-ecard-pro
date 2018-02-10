@@ -175,11 +175,12 @@ class Wp_Ecard_Pro
 		$this->loader->add_filter('plugin_action_links_' . $plugin_basename, $plugin_admin, 'add_action_links');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
-		$this->loader->add_action( 'init', $plugin_admin, 'new_cpt_wp_ecard_pro' );
+		$this->loader->add_action('init', $plugin_admin, 'new_cpt_wp_ecard_pro' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'remove_menu_items' );
-		$this->loader->add_action( 'add_meta_boxes_' . Wp_Ecard_Pro::$cpt_slug,$plugin_admin,'register_ecard_images_metabox');
 		$this->loader->add_action('admin_notices', $plugin_admin, 'display_admin_notices' );
-		$this->loader->add_action('admin_init', $plugin_admin, 'admin_notices_init' );
+        $this->loader->add_action('admin_init', $plugin_admin, 'admin_notices_init' );
+        $this->loader->add_action('init', $plugin_admin, 'init_remove_text_editor',100);
+
 		//$this->loader->add_action( 'admin_init', $plugin_admin, 'admin_add_settings' );
 		
 		}
