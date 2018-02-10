@@ -168,9 +168,6 @@ class Wp_Ecard_Pro
     {
         $plugin_admin = new Wp_Ecard_Pro_Admin($this->get_plugin_name(), $this->get_version());
 
-        // Add menu item
-        $this->loader->add_action('admin_menu', $plugin_admin, 'add_menu_pages');
-
         // Add Settings link to the plugin
         $plugin_basename = plugin_basename(plugin_dir_path(__DIR__) . $this->plugin_name . '.php');
 		
@@ -183,7 +180,7 @@ class Wp_Ecard_Pro
 		$this->loader->add_action( 'add_meta_boxes_' . Wp_Ecard_Pro::$cpt_slug,$plugin_admin,'register_ecard_images_metabox');
 		$this->loader->add_action('admin_notices', $plugin_admin, 'display_admin_notices' );
 		$this->loader->add_action('admin_init', $plugin_admin, 'admin_notices_init' );
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'admin_add_settings' );
+		//$this->loader->add_action( 'admin_init', $plugin_admin, 'admin_add_settings' );
 		
 		}
 

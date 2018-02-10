@@ -66,11 +66,18 @@ class Wp_Ecard_Pro_Admin
     }
     public function create_admin_fields()
     {
-        Container::make( 'theme_options', __( 'E-Card Settings', 'crb' ))
-        ->set_page_parent( 'edit.php?post_type='. $this->plugin_name )
-        ->add_fields( array(
-            Field::make( 'text', 'crb_text', 'Text Field' ),
-            ) );
+        Container::make( 'theme_options', $this->plugin_name, __( 'E-Card Settings (real)', $this->plugin_name . '-settings' ))
+            ->set_page_parent( 'edit.php?post_type='. $this->plugin_name )
+            ->add_tab( __('Profile'), array(
+                Field::make( 'text', 'crb_first_name', 'First Name' ),
+                Field::make( 'text', 'crb_last_name', 'Last Name' ),
+                Field::make( 'text', 'crb_position', 'Position' ),
+            ) )
+            ->add_tab( __('Notification'), array(
+                Field::make( 'text', 'crb_email', 'Notification Email' ),
+                Field::make( 'text', 'crb_phone', 'Phone Number' ),
+            )
+        );
     }
     /**
      * Register the administration menu for this plugin into the WordPress Dashboard menu.
@@ -139,109 +146,7 @@ class Wp_Ecard_Pro_Admin
         //add_options_page( 'WP E-Card Pro Setup', 'WP E-Card Pro', 'manage_options', $this->plugin_name, array($this, 'display_plugin_setup_page')
     }
     
-    public function add_menu_pages()
-    {
-        add_submenu_page(
-            'edit.php?post_type='. $this->plugin_name,
-            __('E-Card Settings', 'textdomain'),
-            __('E-Card Settings', 'textdomain'),
-            'manage_options',
-            'wp-ecard-pro-settings',
-            '' // no callback, let carbon fields do this work
-        );
-	}
 	
-	
-    /**
-     * Render the settings page for this plugin.
-     *
-     * @since    1.0.0
-     */
-    public function admin_add_settings()
-    {
-        add_settings_section(
-        'wep_general',
-        __('General', 'wep'),
-        array( $this, 'wep_general' ),
-        $this->plugin_name
-    );
-    
-        if (isset($_GET["tab"])) {
-            if ($_GET["tab"] == "options-display") {
-                
-				add_settings_field('wep_position',
-				__('Text position', 'wep'),
-				array( $this, 'wep_position_cb' ),
-				$this->plugin_name,
-				'wep_general',
-				array( 'label_for' => 'wep_position' )
-			);
-                register_setting($this->plugin_name, 'wep_position', array( $this, 'wep_sanitize_position' ));
-            } else {
-                add_settings_field(
-                    'wep_position',
-                    __('Text position', 'wep'),
-                    array( $this, 'wep_text_test' ),
-                    $this->plugin_name,
-                    'wep_general',
-                    array( 'label_for' => 'wep_test' )
-                );
-            
-                register_setting($this->plugin_name, 'wep_test', array( $this, 'wep_sanitize_position' ));
-            }
-        } else {
-            add_settings_field('wep_position',
-                    __('Text position', 'wep'),
-                    array( $this, 'wep_position_cb' ),
-                    $this->plugin_name,
-                    'wep_general',
-                    array( 'label_for' => 'wep_position' )
-                );
-        
-            register_setting($this->plugin_name, 'wep_position_cb', array( $this, 'wep_sanitize_position' ));
-        }
-    }
-
-
-
-    /**
-     * Render the text for the general section
-     *
-     * @since  1.0.0
-     */
-    public function wep_general()
-    {
-        echo '<p>' . __('Please change the settings accordingly.', 'wep') . '</p>';
-    }
-    public function wep_position_cb()
-    {
-        $position = get_option('wep_position'); ?>
-			<fieldset>
-				<label>
-					<input type="radio" name="wep_position" id="wep_position" value="before" <?php checked($position, 'before'); ?>>
-					<?php _e('Before the content', 'wep'); ?>
-				</label>
-				<br>
-				<label>
-				<input type="radio" name="wep_position" id="wep_position" value="after" <?php checked($position, 'after'); ?>>
-					<?php _e('After the content', 'wep'); ?>
-				</label>
-			</fieldset>
-		<?php
-    }
-
-    public function wep_text_test()
-    {
-        $position = get_option('wep_test'); ?>
-			<fieldset>
-				<label>
-					<input type="text" name="wep_test" id="wep_test" value="before">
-					<?php _e('Before the content', 'wep'); ?>
-				</label>
-			</fieldset>
-		<?php
-    }
-
     public function remove_menu_items()
     {
         // remove the default 'add new' page because it just takes up space //
