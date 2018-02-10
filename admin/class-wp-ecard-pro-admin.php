@@ -68,14 +68,26 @@ class Wp_Ecard_Pro_Admin
     {
         Container::make( 'theme_options', $this->plugin_name, __( 'Settings', $this->plugin_name . '-settings' ))
             ->set_page_parent( 'edit.php?post_type='. $this->plugin_name )
-            ->add_tab( __('Profile'), array(
+            ->add_tab( __('Dashboard'), array(
                 Field::make( 'text', 'crb_first_name', 'First Name' ),
                 Field::make( 'text', 'crb_last_name', 'Last Name' ),
                 Field::make( 'text', 'crb_position', 'Position' ),
             ) )
-            ->add_tab( __('Notification'), array(
+            ->add_tab( __('General Settings'), array(
                 Field::make( 'text', 'crb_email', 'Notification Email' ),
                 Field::make( 'text', 'crb_phone', 'Phone Number' ),
+            ) )
+            ->add_tab( __('Appearance'), array(
+                Field::make( 'text', 'foo', 'FOO' )
+            ) )
+            ->add_tab( __('E-mail'), array(
+                Field::make( 'text', 'foo2', 'FOO' )
+            ) )
+            ->add_tab( __('Fields'), array(
+                Field::make( 'text', 'foo3', 'FOO' )
+            ) )
+            ->add_tab( __('Testing'), array(
+                Field::make( 'text', 'foo4', 'FOO' )
             )
         );
     }
